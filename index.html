@@ -20,31 +20,29 @@
       <section id="monster" class="container">
         <h2>Monster Health</h2>
         <div class="healthbar">
-          <div
-            class="healthbar__value"
-            :style="{width: monsterHealth+'%'}"
-          ></div>
+          <div class="healthbar__value" :style="monsterHealthBar"></div>
         </div>
       </section>
       <section id="player" class="container">
         <h2>Your Health</h2>
         <div class="healthbar">
-          <div
-            class="healthbar__value"
-            :style="{width: playerHealth+'%'}"
-          ></div>
+          <div class="healthbar__value" :style="playerHealthBar"></div>
         </div>
       </section>
-      <section v-if="!gameOver && !youLose && monsterHealth > 0" id="controls">
-        <button @click="attack">ATTACK</button>
-        <button @click="specialAttack">SPECIAL ATTACK</button>
+      <section v-if="!winner" id="controls">
+        <button @click="attackPlayer">ATTACK</button>
+        <button :disabled="enableSpecialAttack" @click="specialAttack">
+          SPECIAL ATTACK
+        </button>
         <button @click="heal">HEAL</button>
         <button @click="surrender">SURRENDER</button>
       </section>
-      <section v-else-if="gameOver || youLose" class="container">
+      <section v-if="winner" class="container">
         <h2>Game over!</h2>
 
-        <h3>You lost</h3>
+        <h3 v-if="winner === 'monster'">You lost</h3>
+        <h3 v-if="winner === 'player'">You Win</h3>
+        <h3 v-if="winner === 'draw'">It's a draw</h3>
 
         <button @click="start">Start new Game!</button>
       </section>
@@ -59,7 +57,17 @@
       <section id="log" class="container">
         <h2>Battle Log</h2>
         <ul>
-          <li v-for="log in logs" :key="log + Math.random()">{{log}}</li>
+          <li v-for="(log) in logs" :key="log + Math.random()">
+            <div v-for="(value, key) in log">
+              <div v-if="key === 'subject'" :class="computedTurnClass">
+                {{value}}
+              </div>
+              <div v-else-if="key === 'action'" :class="computedActionClass">
+                {{value}}
+              </div>
+              <div v-else>{{value}}</div>
+            </div>
+          </li>
         </ul>
       </section>
     </div>
