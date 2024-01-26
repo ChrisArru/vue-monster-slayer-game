@@ -46,27 +46,19 @@
 
         <button @click="start">Start new Game!</button>
       </section>
-      <section
-        v-else-if="!gameOver && !youLose && monsterHealth === 0"
-        class="container"
-      >
-        <h2>You win!</h2>
-
-        <button @click="start">Start new Game!</button>
-      </section>
       <section id="log" class="container">
         <h2>Battle Log</h2>
         <ul>
           <li v-for="(log) in logs" :key="log + Math.random()">
-            <div v-for="(value, key) in log">
-              <div v-if="key === 'subject'" :class="computedTurnClass">
-                {{value}}
-              </div>
-              <div v-else-if="key === 'action'" :class="computedActionClass">
-                {{value}}
-              </div>
-              <div v-else>{{value}}</div>
-            </div>
+            <span
+              :class="{'log--player': log.subject==='Player','log--monster': log.subject==='Monster' }"
+              >{{log.subject}}</span
+            >
+            <span> {{log.message}} </span>
+            <span
+              :class="{'log--heal': log.type==='heal','log--damage': log.type==='damage'}"
+              >{{log.action}}</span
+            >
           </li>
         </ul>
       </section>
